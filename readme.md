@@ -2,6 +2,8 @@
 
 Sistema inteligente de controle de semáforos baseado em visão computacional e detecção de veículos em tempo real, implementado conforme as normas **MBST Vol. V - Sinalização Semafórica**.
 
+> ⚠️ **AVISO IMPORTANTE**: Este código foi desenvolvido para Python 3.8 até Python 3.11. **Versões acima de Python 3.11 não são compatíveis** e o sistema não funcionará corretamente. Por favor, use Python 3.8, 3.9, 3.10 ou 3.11.
+
 ## 📋 Índice
 
 - [Sobre o Projeto](#sobre-o-projeto)
@@ -57,7 +59,7 @@ O sistema ajusta automaticamente os tempos de verde baseado no fluxo de veículo
 - **Processador**: CPU multi-core recomendado
 
 ### Software
-- Python 3.8 ou superior
+- **Python 3.8, 3.9, 3.10 ou 3.11** (⚠️ **NÃO use Python 3.12 ou superior** - não é compatível)
 - OpenCV (cv2)
 - PyTorch
 - YOLOv5 (via torch.hub)
@@ -65,6 +67,16 @@ O sistema ajusta automaticamente os tempos de verde baseado no fluxo de veículo
 - Pandas
 
 ## 🔧 Instalação
+
+### 0. Verifique a versão do Python
+
+⚠️ **IMPORTANTE**: Antes de prosseguir, verifique se você está usando Python 3.8, 3.9, 3.10 ou 3.11:
+
+```bash
+python --version
+```
+
+Se você tiver Python 3.12 ou superior, será necessário instalar uma versão compatível. O código **não funcionará** com versões acima de Python 3.11.
 
 ### 1. Clone ou baixe o repositório
 
@@ -267,6 +279,20 @@ controller.run()
 ```
 
 ## 🔍 Troubleshooting
+
+### Problema: Erros de compatibilidade ou código não funciona
+
+**Sintomas**: Erros ao importar módulos, problemas com PyTorch, ou comportamento inesperado.
+
+**Solução**: 
+- ⚠️ **Verifique a versão do Python**: Este código foi desenvolvido para Python 3.8 até 3.11
+- Versões acima de Python 3.11 (3.12, 3.13, etc.) **NÃO são compatíveis**
+- Para verificar sua versão:
+  ```bash
+  python --version
+  ```
+- Se você tiver Python 3.12 ou superior, instale uma versão compatível (3.8, 3.9, 3.10 ou 3.11)
+- Recomendado: Use Python 3.10 ou 3.11 para melhor compatibilidade
 
 ### Problema: Câmeras não são detectadas
 
