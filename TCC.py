@@ -6,6 +6,8 @@ import numpy as np
 from collections import deque
 import pandas as pd  # Added explicit import for pandas
 import warnings
+import sys
+import os
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -83,8 +85,18 @@ class SmartTrafficLight:
 
     def load_yolo_model(self):
         try:
-            # Carrega o modelo YOLOv5
-            self.yolo_model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+            # Tenta primeiro usar o repositório local se existir
+            yolo_repo = '/opt/yolov5'
+            hubconf_path = os.path.join(yolo_repo, 'hubconf.py')
+            
+            if os.path.exists(hubconf_path):
+                # Usa repositório local se disponível
+                yolo_repo_normalized = os.path.normpath(yolo_repo)
+                self.yolo_model = torch.hub.load(yolo_repo_normalized, 'yolov5s', source='local', pretrained=True)
+            else:
+                # Fallback: usa ultralytics via torch.hub (baixa automaticamente)
+                self.yolo_model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+            
             self.yolo_model.conf = 0.35  # Reduzido ainda mais para detectar motos
             self.yolo_model.iou = 0.4
             # Incluindo classe 3 (motorcycle) na lista
@@ -93,6 +105,8 @@ class SmartTrafficLight:
             print("✔ Classes de veículos detectadas: Carro(2), Moto(3), Ônibus(5), Caminhão(7)")
         except Exception as e:
             print(f"❌ Erro ao carregar YOLOv5: {e}")
+            import traceback
+            traceback.print_exc()
 
     def setup_cameras(self):
         for camera in [self.camera1, self.camera2]:

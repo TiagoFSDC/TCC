@@ -24,12 +24,8 @@ RUN pip install --no-cache-dir --pre \
         --index-url https://download.pytorch.org/whl/cpu \
         torch==2.2.2 torchvision==0.17.2
 
-# Instala demais dependências
+# Instala demais dependências (inclui ultralytics que gerencia YOLOv5)
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Baixa o repositório YOLOv5 localmente para uso offline e instala dependências específicas
-RUN git clone --depth 1 https://github.com/ultralytics/yolov5.git /opt/yolov5 \
-    && pip install --no-cache-dir -r /opt/yolov5/requirements.txt
 
 # Garante versões compatíveis de Numpy/Pandas após instalação do YOLOv5
 RUN pip install --no-cache-dir --force-reinstall \
