@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  smart-traffic-light:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-traffic-light
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DISPLAY=host.docker.internal:0.0
+    command: ["python", "TCC.py"]
+    # Para hosts Linux é possível expor a GPU (por exemplo NVIDIA) adicionando
+    # as linhas abaixo e habilitando o runtime adequado:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: ["gpu"]
+
+
+
+
+
