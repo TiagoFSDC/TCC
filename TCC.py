@@ -259,16 +259,23 @@ class SmartTrafficLight:
 
         cv2.imshow('Status do Sistema', status_img)
 
-    def activate_emergency_green(self, street):
+    def activate_emergency_green(self, street, green_min_met=False):
         if self.emergency_activated:
             return
 
         current_time = time.time()
         remaining = self.green_end_time - current_time
 
-        # Reduzir o tempo restante para EMERGENCY_RED_TIME
-        if remaining > self.EMERGENCY_RED_TIME:
-            self.green_end_time = current_time + self.EMERGENCY_RED_TIME
+        # Se o verde mínimo foi atendido, reduzir para GAP_EXTENSION
+        # Caso contrário, usar EMERGENCY_RED_TIME
+        if green_min_met:
+            target_time = self.GAP_EXTENSION
+        else:
+            target_time = self.EMERGENCY_RED_TIME
+
+        # Reduzir o tempo restante para o tempo alvo
+        if remaining > target_time:
+            self.green_end_time = current_time + target_time
 
         self.emergency_activated = True
         self.emergency_target = street
@@ -282,14 +289,16 @@ class SmartTrafficLight:
         remaining = self.green_end_time - current_time
 
         # 🚨 Emergência - apenas quando há carros em uma rua e nenhum na outra e após o verde mínimo
-        if elapsed >= self.GREEN_MIN:  # Verificar se o verde mínimo foi respeitado
+        green_min_met = elapsed >= self.GREEN_MIN  # Verificar se o verde mínimo foi respeitado
+        
+        if green_min_met:
             if cars_A and not cars_B:
                 if self.semaphore_A_state == 'RED' and self.semaphore_B_state == 'GREEN' and not self.emergency_activated:
-                    self.activate_emergency_green('A')
+                    self.activate_emergency_green('A', green_min_met=True)
 
             if cars_B and not cars_A:
                 if self.semaphore_B_state == 'RED' and self.semaphore_A_state == 'GREEN' and not self.emergency_activated:
-                    self.activate_emergency_green('B')
+                    self.activate_emergency_green('B', green_min_met=True)
 
         # Aplicar extensão quando:
         # 1. Semáforo está verde para a rua
@@ -457,7 +466,7 @@ class SmartTrafficLight:
         print("✔ Sistema parado")
 
 def main():
-    traffic_system = SmartTrafficLight('video1.mp4', 'IMG_2268.mp4')
+    traffic_system = SmartTrafficLight('Video 1 correto.mp4', 'Video correto 2.mp4')
     try:
         traffic_system.start()
     except Exception as e:
